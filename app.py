@@ -30,9 +30,14 @@ with st.sidebar:
                     p.write_bytes(up.getvalue())
                     rows += parse_receipt(p)
         new = pd.DataFrame(rows)
-        old = pd.read_csv(PARSED) if PARSED.exists() else pd.DataFrame()
-        pd.concat([old, new]).drop_duplicates(["receipt_id", "item", "date"], keep="last").to_csv(PARSED, index=False)
-        st.success(f"Added {len(new)} items from {len(uploads)} receipts")
+        if new.empty:
+            st.error("No item lines could be read from these images.")
+        else:
+            old = pd.read_csv(PARSED) if PARSED.exists() else pd.DataFrame(columns=new.columns)
+            # Re-scanning a receipt replaces its old rows instead of adding them twice.
+            old = old[~old["receipt_id"].isin(new["receipt_id"])]
+            pd.concat([old, new]).to_csv(PARSED, index=False)
+            st.success(f"Added {len(new)} items from {len(uploads)} receipts")
 
     st.header("2. CPI data")
     cpi_up = st.file_uploader("Official CPI CSV (month, cpi_general, cpi_food)", type="csv")

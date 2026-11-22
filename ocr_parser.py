@@ -62,6 +62,13 @@ def match_item(raw):
     return hit[0] if hit else None
 
 
+def receipt_id(image_path):
+    """Generated receipts are named R0001_20240103.png -> 'R0001'. Any other photo keeps its full
+    file name, so two photos like IMG_1234.jpg and IMG_5678.jpg never share an id."""
+    m = re.match(r"(R\d+)_\d{8}$", image_path.stem)
+    return m[1] if m else image_path.stem
+
+
 def parse_receipt(image_path):
     rows = ocr_rows(image_path)
     text = "\n".join(rows)
@@ -88,7 +95,7 @@ def parse_receipt(image_path):
             qty = max(1, round(amt / rate))
         qty = qty or 1  # amount/rate wasn't a whole number -> a digit was misread; line_ok flags it
         items.append({
-            "receipt_id": image_path.stem.split("_")[0], "date": when, "store": store,
+            "receipt_id": receipt_id(image_path), "date": when, "store": store,
             "raw_name": lm["name"], "item": name, "category": CATEGORY_OF.get(name, "Unknown"),
             "qty": qty, "rate": rate, "amount": amt,
             "line_ok": abs(qty * rate - amt) <= 0.5, "date_from_ocr": bool(m),

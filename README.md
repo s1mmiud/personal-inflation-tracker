@@ -1,8 +1,24 @@
 # Personal Inflation Tracker
 
+[![Open the live app](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://personal-inflation-tracker-c9xkqmugsdtyvtycstakmv.streamlit.app/)
+
 Scan grocery receipts with OCR, build a personal price index from what you actually buy, and compare your inflation rate with the official Consumer Price Index (CPI).
 
 **Question:** Official CPI is an average over a national basket. Is *my* inflation the same?
+
+**▶ Live demo:** https://personal-inflation-tracker-c9xkqmugsdtyvtycstakmv.streamlit.app/
+
+![Dashboard screenshot](docs/dashboard.png)
+
+**Highlights**
+- OCR pipeline with validation rules: 97.8% of receipt lines recovered, with mistakes flagged rather than silently used
+- Personal price index built with the same Laspeyres method used for official CPI, weighted by your own spending
+- Tested against synthetic data with a known answer: the final inflation figure is within 0.3 percentage points of the truth
+- Interactive dashboard: inflation vs CPI, the categories driving it, and item-level price changes
+
+**Tech:** Python · pandas · RapidOCR · Plotly · Streamlit
+
+> The demo uses synthetic receipts and a placeholder CPI series. See the *CPI data* section below.
 
 ## Pipeline
 
