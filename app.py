@@ -167,8 +167,8 @@ with nav_col:
         page = st.radio("Pages", list(pages), key="page", label_visibility="collapsed",
                         format_func=lambda p: f"{pages[p]}&nbsp;&nbsp;{p}")
         with st.container(key="navnote", gap="small"):
-            st.html('<div class="note"><h4>Demo data</h4><p>The receipts are synthetic and the CPI series is a '
-                    'placeholder until official MoSPI figures are added.</p></div>')
+            st.html('<div class="note"><h4>About the data</h4><p>CPI is official MoSPI data. The receipts are '
+                    'synthetic, with made-up price trends, so the gap with CPI is illustrative, not a finding.</p></div>')
             st.link_button("View code on GitHub", REPO, icon=":material/code:")
 
 with main:
@@ -197,8 +197,9 @@ with main:
             with st.popover("Settings", icon=":material/tune:"):
                 st.slider("Base period (months)", 6, 12, 12, key="base_months",
                           help="Spending in these first months sets the basket weights.")
-                st.file_uploader("Official CPI file (month, cpi_general, cpi_food)", type="csv", key="cpi_file")
-                st.caption("Download real figures from cpi.mospi.gov.in")
+                st.file_uploader("Replace CPI file (month, cpi_general, cpi_food)", type="csv", key="cpi_file")
+                st.caption("Bundled: MoSPI All-India CPI, rural + urban combined, base 2012=100. "
+                           "CPI food is the Consumer Food Price Index.")
             st.download_button("Export", table.round(2).to_csv().encode(), "inflation_vs_cpi.csv",
                                icon=":material/download:", help="Download the results as CSV")
     with who:

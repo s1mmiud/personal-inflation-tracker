@@ -18,7 +18,7 @@ Scan grocery receipts with OCR, build a personal price index from what you actua
 
 **Tech:** Python · pandas · RapidOCR · Plotly · Streamlit
 
-> The demo uses synthetic receipts and a placeholder CPI series. See the *CPI data* section below.
+> CPI figures are official MoSPI data. The receipts are synthetic, with made-up price trends, so the gap between "my" inflation and CPI shows how the method works. It is not a real-world finding. See *Data* below.
 
 ## Pipeline
 
@@ -87,14 +87,20 @@ Notes:
 | OCR: item lines recovered | 97.8% |
 | OCR: unit price exactly right | 94.2% (98.8% on validated lines) |
 | Error in YoY inflation, OCR vs ground truth | mean 0.26 pp, max 0.51 pp |
-| My grocery inflation, Dec 2025 | 7.3% (CPI general 5.0%, CPI food 7.7%) |
+| Synthetic basket inflation, Dec 2025 | 7.3% (official CPI general 1.3%, CPI food -2.7%) |
 | Biggest driver | Pulses (+2.3 pp): toor dal is 10.5% of the basket and up ~12% |
 
 Because the receipts are synthetic, the "true" inflation is known, so you can measure how much error the OCR step adds to the final number. That makes a good point for your report.
 
-## ⚠️ CPI data
+## Data
 
-`data/cpi.csv` is a **placeholder** generated so the project runs offline. It is not official data. Before you submit, replace it with real All-India CPI from MoSPI (https://cpi.mospi.gov.in), keeping the columns `month, cpi_general, cpi_food` (month as `YYYY-MM`). You can also upload the file in the dashboard sidebar.
+**CPI (`data/cpi.csv`) is official.** It holds All-India CPI, Combined (rural + urban), base 2012=100, for Jan 2024 to Dec 2025, all marked final, from the MoSPI API (`api.mospi.gov.in`, endpoint `/api/cpi/getCPIIndex`).
+- `cpi_general` is the General index.
+- `cpi_food` is the Consumer Food Price Index (CFPI), the series behind India's headline "food inflation".
+
+Year-on-year rates computed from these indices match MoSPI's published inflation to within 0.004 percentage points. India moved CPI to a new 2024=100 base in Feb 2026. The 2012 series is used here because it covers the whole 2024–2025 period.
+
+**The receipts are synthetic.** Each item's price trend is set by hand in `catalog.py` (for example, toor dal +12% a year). Real food prices actually fell in 2025, which is why the synthetic basket shows far higher inflation than CPI. To make the comparison meaningful, run the pipeline on real receipts, or calibrate the item trends to MoSPI's sub-group indices.
 
 ## Ideas to extend (and discuss in your viva)
 
@@ -106,6 +112,6 @@ Because the receipts are synthetic, the "true" inflation is known, so you can me
 
 ## Limitations
 
-- Dummy data: the results show the method works, not what real-world inflation was.
+- Synthetic receipts: the results show the method works, not what real-world inflation was.
 - Groceries only, while CPI also covers housing, fuel, health, education and more. That's why your number is closer to **CPI food** than to **CPI general**.
 - Parsing depends on one receipt layout. A different layout means changing `LINE_RE`.
