@@ -209,7 +209,7 @@ with main:
     # ---------- shared month control ----------
     def controls(with_view=True):
         if with_view:
-            left, _, right = st.columns([1.5, 1.4, 1.7], vertical_alignment="center")
+            left, _, right = st.columns([1.5, 0.6, 1.9], vertical_alignment="center")
         else:
             left, _ = st.columns([1.5, 3.1], vertical_alignment="center")
         with left:
